@@ -8,29 +8,22 @@ const other_page = fs.readFileSync("./other.ejs", "utf-8");
 const style_css = fs.readFileSync("./style.css", "utf-8");
 
 const getFromClient = (req, res) => {
-  const url_parts = url.parse(req.url);
+  const url_parts = url.parse(req.url, true);
+  let content;
+  let query;
   switch (url_parts.pathname) {
     case "/":
-      const index_content = ejs.render(index_page, {
-        title: "Indexページ",
-        content: "これはテンプレートを使用したサンプルページです。",
+      content = "これはテンプレートをindexページです。";
+      query = url_parts.query;
+      if (query.msg !== undefined) {
+        content += "あなたは、「" + query.msg + "」と送りました";
+      }
+      content = ejs.render(index_page, {
+        title: "Index",
+        content: content,
       });
       res.writeHead(200, { "Content-Type": "text/html" });
-      res.write(index_content);
-      res.end();
-      break;
-    case "/style.css":
-      res.writeHead(200, { "Content-Type": "text/css" });
-      res.write(style_css);
-      res.end();
-      break;
-    case "/other":
-      const other_content = ejs.render(other_page, {
-        title: "Other",
-        content: "これはアザーページです。よろしく。",
-      });
-      res.writeHead(200, { "Content-Type": "text/html" });
-      res.write(other_content);
+      res.write(content);
       res.end();
       break;
     default:
