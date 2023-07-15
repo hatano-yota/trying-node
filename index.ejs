@@ -16,7 +16,10 @@
     </header>
     <main>
       <p><%=content %></p>
-      <p><a href="/other">Other Page に移動 &gt;&gt;</a></p>
+      <form method="post" action="/other">
+        <input type="text" name="msg" class="form-control">
+        <input type="submit" value="Click" class="btn btn-primary">
+      </form>
     </main>
   </body>
 </html>
