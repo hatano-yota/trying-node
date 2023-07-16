@@ -42,6 +42,7 @@ const response_index = (req, res) => {
     // データ受信終了のイベント処理
     req.on("end", () => {
       data = qs.parse(body); // データのパース
+      setCookie("msg", data.msg, res); // クッキーの保存
       write_index(req, res);
     });
   } else {
@@ -49,17 +50,38 @@ const response_index = (req, res) => {
   }
 };
 
-// index の表示の作成
+// indexページの作成
 const write_index = (req, res) => {
   const msg = "※伝言を表示します。";
+  const cookie_data = getCookie("msg", req);
   const content = ejs.render(index_page, {
     title: "Index",
     content: msg,
     data: data,
+    cookie_data: cookie_data,
   });
   res.writeHead(200, { "Content-type": "text/html" });
   res.write(content);
   res.end();
+};
+
+// クッキーの値を設定
+const setCookie = (key, value, res) => {
+  let cookie = escape(value);
+  res.setHeader("Set-Cookie", [key + "=" + cookie]);
+};
+
+// クッキーの値を取得
+const getCookie = (key, req) => {
+  const cookie_data = req.headers.cookie !== undefined ? req.headers.cookie : "";
+  const data = cookie_data.split(";");
+  for (let i in data) {
+    if (data[i].trim().startsWith(key + "=")) {
+      const result = data[i].trim().substring(key.length + 1);
+      return unescape(result);
+    }
+  }
+  return "";
 };
 
 const response_other = (req, res) => {
