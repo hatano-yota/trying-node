@@ -15,6 +15,13 @@ const data = {
   Ichiro: "070-333-444",
 };
 
+const data2 = {
+  Taro: ["taro@yamada", "09-999-999", "Tokyo"],
+  Hanako: ["hanako@flower", "080-889-998", "Yokohama"],
+  Sachiko: ["sachi@happy", "080-765-456", "Fukuoka"],
+  Ichiro: ["ichiro@unbreakable", "070-333-444", "USA"],
+};
+
 const getFromClient = (req, res) => {
   const url_parts = url.parse(req.url, true);
   switch (url_parts.pathname) {
@@ -51,36 +58,15 @@ const response_index = (req, res) => {
 
 const response_other = (req, res) => {
   let msg = "これはOtherページです。";
-  // POSTアクセス処理
-  if (req.method === "POST") {
-    let body = "";
-    // データ受信のイベント処理
-    req.on("data", (data) => {
-      body += data;
-    });
-    // データ受信終了のイベント処理
-    req.on("end", () => {
-      const post_data = qs.parse(body); // データのパース
-      msg += "あなたは、「" + post_data.msg + "」と書きました。";
-      const content = ejs.render(other_page, {
-        title: "Other",
-        content: msg,
-      });
-      res.writeHead(200, { "Content-Type": "text/html" });
-      res.write(content);
-      res.end();
-    });
-  } else {
-    // GETアクセス処理
-    msg = "ページがありません";
-    const content = ejs.render(other_page, {
-      title: "Other",
-      content: msg,
-    });
-    res.writeHead(200, { "Content-Type": "text/html" });
-    res.write(content);
-    res.end();
-  }
+  const content = ejs.render(other_page, {
+    title: "Other",
+    content: msg,
+    data: data2,
+    filename: "data_item",
+  });
+  res.writeHead(200, { "Content-Type": "text/html" });
+  res.write(content);
+  res.end();
 };
 
 const server = http.createServer(getFromClient);
