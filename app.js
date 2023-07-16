@@ -9,11 +9,11 @@ const other_page = fs.readFileSync("./other.ejs", "utf-8");
 const style_css = fs.readFileSync("./style.css", "utf-8");
 
 const data = {
-  'Taro': '09-999-999',
-  'Hanako': '080-889-889',
-  'Sachiko': '070-765-456',
-  'Ichiro': '070-333-444',
-}
+  Taro: "09-999-999",
+  Hanako: "080-889-889",
+  Sachiko: "070-765-456",
+  Ichiro: "070-333-444",
+};
 
 const getFromClient = (req, res) => {
   const url_parts = url.parse(req.url, true);
@@ -41,7 +41,8 @@ const response_index = (req, res) => {
   const content = ejs.render(index_page, {
     title: "index_page",
     content: msg,
-    data: data
+    data: data,
+    filename: "data_item",
   });
   res.writeHead(200, { "Content-type": "text/html" });
   res.write(content);
