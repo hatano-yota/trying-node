@@ -8,19 +8,7 @@ const index_page = fs.readFileSync("./index.ejs", "utf-8");
 const other_page = fs.readFileSync("./other.ejs", "utf-8");
 const style_css = fs.readFileSync("./style.css", "utf-8");
 
-const data = {
-  Taro: "09-999-999",
-  Hanako: "080-889-889",
-  Sachiko: "070-765-456",
-  Ichiro: "070-333-444",
-};
-
-const data2 = {
-  Taro: ["taro@yamada", "09-999-999", "Tokyo"],
-  Hanako: ["hanako@flower", "080-889-998", "Yokohama"],
-  Sachiko: ["sachi@happy", "080-765-456", "Fukuoka"],
-  Ichiro: ["ichiro@unbreakable", "070-333-444", "USA"],
-};
+let data = { msg: "no message..." };
 
 const getFromClient = (req, res) => {
   const url_parts = url.parse(req.url, true);
@@ -44,12 +32,30 @@ const getFromClient = (req, res) => {
 };
 
 const response_index = (req, res) => {
-  const msg = "これはIndexページです。";
+  // POSTアクセス時の処理
+  if (req.method === "POST") {
+    let body = "";
+    // データ受信のイベント処理
+    req.on("data", (data) => {
+      body += data;
+    });
+    // データ受信終了のイベント処理
+    req.on("end", () => {
+      data = qs.parse(body); // データのパース
+      write_index(req, res);
+    });
+  } else {
+    write_index(req, res);
+  }
+};
+
+// index の表示の作成
+const write_index = (req, res) => {
+  const msg = "※伝言を表示します。";
   const content = ejs.render(index_page, {
-    title: "index_page",
+    title: "Index",
     content: msg,
     data: data,
-    filename: "data_item",
   });
   res.writeHead(200, { "Content-type": "text/html" });
   res.write(content);
@@ -61,7 +67,7 @@ const response_other = (req, res) => {
   const content = ejs.render(other_page, {
     title: "Other",
     content: msg,
-    data: data2,
+    data: data,
     filename: "data_item",
   });
   res.writeHead(200, { "Content-Type": "text/html" });
