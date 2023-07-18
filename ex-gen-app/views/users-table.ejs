@@ -17,15 +17,7 @@
     </header>
     <main>
       <table class="table">
-        <% for(let i in content) { %>
-        <tr>
-          <% const obj = content[i] %>
-          <th><%= obj.id %></th>
-          <td><%= obj.name %></td>
-          <td><%= obj.mail %></td>
-          <td><%= obj.age %></td>
-        </tr>
-        <% } %>
+        <%- content %>
       </table>
     </main>
   </body>
