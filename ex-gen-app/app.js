@@ -6,9 +6,9 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
-const helloRouter = require("./routes/hello");
-const holaRouter = require("./routes/hola");
-const merhabaRouter = require("./routes/merhaba");
+const messageLogRouter = require("./routes/message-log");
+const newsRouter = require("./routes/news");
+const usersTableRouter = require("./routes/users-table");
 
 let app = express();
 const session_opt = {
@@ -31,9 +31,9 @@ app.use(session(session_opt));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-app.use("/hello", helloRouter);
-app.use("/hola", holaRouter);
-app.use("/merhaba", merhabaRouter);
+app.use("/message-log", messageLogRouter);
+app.use("/news", newsRouter);
+app.use("/users-table", usersTableRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

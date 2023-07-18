@@ -21,7 +21,7 @@ router.get("/", (req, res, next) => {
           title: "Google News",
           content: result.rss.channel[0].item,
         };
-        res.render("hola", data);
+        res.render("news", data);
       });
     });
   });

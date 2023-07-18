@@ -7,20 +7,20 @@ router.get("/", (req, res, next) => {
     msg = `Last Message: ${req.session.message}`;
   }
   const data = {
-    title: "Hello!",
+    title: "Message Log!",
     content: msg,
   };
-  res.render("hello", data);
+  res.render("message-log", data);
 });
 
 router.post("/post", (req, res, next) => {
   const msg = req.body["message"];
   req.session.message = msg;
   const data = {
-    title: "Hello!",
+    title: "Message Log!",
     content: `LAST MESSAGE: ${req.session.message}`,
   };
-  res.render("hello", data);
+  res.render("message-log", data);
 });
 
 module.exports = router;

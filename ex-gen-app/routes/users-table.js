@@ -15,10 +15,10 @@ router.get("/", (req, res, next) => {
       // データベースアクセス完了時の処理
       if (!err) {
         let data = {
-          title: "Merhaba!",
+          title: "Users Table!",
           content: rows, // 取得したレコードデータ
         };
-        res.render("merhaba", data);
+        res.render("users-table", data);
       }
     });
   });
