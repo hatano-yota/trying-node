@@ -6,7 +6,6 @@ const sqlite3 = require("sqlite3");
 // データベースオブジェクトの取得
 const db = new sqlite3.Database("mydb.sqlite3");
 
-// GETアクセスの処理
 router.get("/", (req, res, next) => {
   // データベースのシリアライズ
   db.serialize(() => {
@@ -40,6 +39,7 @@ router.get("/add", (req, res, next) => {
   };
   res.render("users-table/add", data);
 });
+
 router.post("/add", (req, res, next) => {
   const nm = req.body.name;
   const ml = req.body.mail;
@@ -48,6 +48,23 @@ router.post("/add", (req, res, next) => {
     db.run("insert into mydata (name, mail, age) values (?, ?, ?)", nm, ml, ag);
   });
   res.redirect("/users-table");
+});
+
+router.get("/show", (req, res, next) => {
+  const id = req.query.id;
+  db.serialize(() => {
+    const q = "select * from mydata where id = ?";
+    db.get(q, [id], (err, row) => {
+      if (!err) {
+        const data = {
+          title: "Users-table/show",
+          content: `id = ${id} のレコード：`,
+          mydata: row,
+        };
+        res.render("users-table/show", data);
+      }
+    });
+  });
 });
 
 module.exports = router;
