@@ -67,4 +67,59 @@ router.get("/show", (req, res, next) => {
   });
 });
 
+router.get("/edit", (req, res, next) => {
+  const id = req.query.id;
+  db.serialize(() => {
+    const q = "select * from mydata where id = ?";
+    db.get(q, [id], (err, row) => {
+      if (!err) {
+        const data = {
+          title: "users-table/edit",
+          content: `id = ${id} のレコードを編集：`,
+          mydata: row,
+        };
+        res.render("users-table/edit", data);
+      }
+    });
+  });
+});
+
+router.post("/edit", (req, res, next) => {
+  const id = req.body.id;
+  const nm = req.body.name;
+  const ml = req.body.mail;
+  const ag = req.body.age;
+  const q = "update mydata set name = ?, mail = ?, age = ? where id = ?";
+  db.serialize(() => {
+    db.run(q, nm, ml, ag, id);
+  });
+  res.redirect("/users-table");
+});
+
+router.get("/delete", (req, res, next) => {
+  const id = req.query.id;
+  db.serialize(() => {
+    const q = "select * from mydata where id = ?";
+    db.get(q, [id], (err, row) => {
+      if (!err) {
+        const data = {
+          title: "users-table/delete",
+          content: `id = ${id} のレコードを削除`,
+          mydata: row,
+        };
+        res.render("users-table/delete", data);
+      }
+    });
+  });
+});
+
+router.post("/delete", (req, res, next) => {
+  const id = req.body.id;
+  db.serialize(() => {
+    const q = "delete from mydata where id = ?";
+    db.run(q, id);
+  });
+  res.redirect("/users-table");
+});
+
 module.exports = router;
