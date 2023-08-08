@@ -1,4 +1,5 @@
 const express = require("express");
+const { check, validationResult } = require("express-validator");
 const router = express.Router();
 
 const sqlite3 = require("sqlite3");
@@ -36,19 +37,47 @@ router.get("/add", (req, res, next) => {
   const data = {
     title: "Hello/Add",
     content: "新しいレコードを入力：",
+    form: { name: "", mail: "", age: 0 },
   };
   res.render("users-table/add", data);
 });
 
-router.post("/add", (req, res, next) => {
-  const nm = req.body.name;
-  const ml = req.body.mail;
-  const ag = req.body.age;
-  db.serialize(() => {
-    db.run("insert into mydata (name, mail, age) values (?, ?, ?)", nm, ml, ag);
-  });
-  res.redirect("/users-table");
-});
+router.post(
+  "/add",
+  [
+    check("name", "NAME は必ず入力してください。").notEmpty().escape(),
+    check("mail", "MAIL はメールアドレスを入力してください。").isEmail(),
+    check("age", "AGE は年齢（整数）を入力してください。").isInt(),
+    check("age", "AGE はゼロ以上130以下で入力してください").custom((value) => {
+      return (value >= 0) & (value <= 130);
+    }),
+  ],
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const result_arr = errors.array();
+      let result = `<ul class="text-danger">`;
+      for (let n in result_arr) {
+        result += `<li>${result_arr[n].msg}</li>`;
+      }
+      result += "</ul>";
+      const data = {
+        title: "Users-table/Add",
+        content: result,
+        form: req.body,
+      };
+      res.render("users-table/add", data);
+    } else {
+      const nm = req.body.name;
+      const ml = req.body.mail;
+      const ag = req.body.age;
+      db.serialize(() => {
+        db.run("insert into mydata (name, mail, age) values (?, ?, ?)", nm, ml, ag);
+      });
+      res.redirect("/users-table");
+    }
+  },
+);
 
 router.get("/show", (req, res, next) => {
   const id = req.query.id;
