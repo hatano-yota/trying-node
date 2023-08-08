@@ -122,4 +122,38 @@ router.post("/delete", (req, res, next) => {
   res.redirect("/users-table");
 });
 
+router.get("/find", (req, res, next) => {
+  db.serialize(() => {
+    db.all("select * from mydata", (err, rows) => {
+      if (!err) {
+        const data = {
+          title: "Users-table/find",
+          find: "",
+          content: "検索条件を入力してください",
+          mydata: rows,
+        };
+        res.render("users-table/find", data);
+      }
+    });
+  });
+});
+
+router.post("/find", (req, res, next) => {
+  let find = req.body.find;
+  db.serialize(() => {
+    const q = "select * from mydata where ";
+    db.all(q + find, [], (err, rows) => {
+      if (!err) {
+        const data = {
+          title: "Users-table/find",
+          find: find,
+          content: `検索条件 ${find}`,
+          mydata: rows,
+        };
+        res.render("users-table/find", data);
+      }
+    });
+  });
+});
+
 module.exports = router;
