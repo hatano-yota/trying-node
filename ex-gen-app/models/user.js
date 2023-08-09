@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -13,14 +11,44 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  User.init({
-    name: DataTypes.STRING,
-    pass: DataTypes.STRING,
-    mail: DataTypes.STRING,
-    age: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
+  User.init(
+    {
+      name: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: "名前は必ず入力してください",
+          },
+        },
+      },
+      pass: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: "パスワードは必ず入力してください",
+          },
+        },
+      },
+      mail: {
+        type: DataTypes.STRING,
+        validate: {
+          isEmail: {
+            msg: "メールアドレスを入力してください",
+          },
+        },
+      },
+      age: {
+        type: DataTypes.INTEGER,
+        validate: {
+          isInt: { msg: "整数を入力ください" },
+          min: { args: [0], msg: "ゼロ以上の値を入力してください" },
+        },
+      },
+    },
+    {
+      sequelize,
+      modelName: "User",
+    },
+  );
   return User;
 };
