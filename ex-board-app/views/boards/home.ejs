@@ -16,9 +16,9 @@
       <h1 class="display-4"><%= title %></h1>
     </header>
     <main>
-      <p class="h4"><%= userName %></p>
+      <p class="h4"><%= userName %>'s messages.</p>
       <table class="table mt-5">
-        <% for (let i in content) { %> <%- include('data_item', {val:content[i]}) %> <%}%>
+        <% for (let i in content) { %> <%- include('data_item', { val : content[i] }) %> <% } %>
       </table>
 
       <ul class="pagination justify-content-center">
