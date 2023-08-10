@@ -9,7 +9,7 @@ const pnum = 10;
 
 // ログインチェックの関数
 const check = (req, res) => {
-  if (req.session.login === null) {
+  if (req.session.login == null) {
     req.session.back = "/md";
     res.redirect("/users/login");
     return true;
@@ -68,7 +68,7 @@ router.get("/add", (req, res, next) => {
 });
 
 // 新規作成フォームの送信処理
-router.get("/add", (req, res, next) => {
+router.post("/add", (req, res, next) => {
   if (check(req, res)) {
     return;
   }

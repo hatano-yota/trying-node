@@ -105,7 +105,7 @@ router.post("/login", (req, res, next) => {
     if (usr !== null) {
       req.session.login = usr;
       let back = req.session.back;
-      if (back === undefined) {
+      if (back == null) {
         back = "/";
       }
       res.redirect(back);
