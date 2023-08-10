@@ -53,18 +53,20 @@ router.post("/add", (req, res, next) => {
   if (check(req, res)) {
     return;
   }
-  db.sequelize.sync().then(() =>
-    db.Board.create({
-      userId: req.session.login.id,
-      message: req.body.msg,
-    })
-      .then(() => {
-        res.redirect("/boards");
-      })
-      .catch((err) => {
-        res.redirect("/boards");
+  db.sequelize
+    .sync()
+    .then(() =>
+      db.Board.create({
+        userId: req.session.login.id,
+        message: req.body.msg,
       }),
-  );
+    )
+    .then(() => {
+      res.redirect("/boards");
+    })
+    .catch((err) => {
+      res.redirect("/boards");
+    });
 });
 
 // 利用者のホーム

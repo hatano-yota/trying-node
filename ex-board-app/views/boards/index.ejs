@@ -25,17 +25,13 @@
           <input type="submit" value="送信" class="btn btn-primary col-2" />
         </div>
       </form>
-
       <table class="table mt-5">
         <% for (let i in content) { %> <%- include('data_item', {val: content[i]}) %> <% } %>
       </table>
-
       <ul class="pagenation justify-content-center">
         <li class="page-item">
           <a href="/boards/<%= page - 1 %>" class="page-link">&lt;&lt; prev</a>
-        </li>
-        <li class="page-item">
-          <a href="/boards/<%= page + 1 %>" class="page-link">next &gt;&gt;</a>
+          <a href="/boards/<%= page + 1 %>" class="page-link mt-1">next &gt;&gt;</a>
         </li>
       </ul>
     </main>
