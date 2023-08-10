@@ -8,6 +8,7 @@ const logger = require("morgan");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const boardsRouter = require("./routes/boards");
+const markRouter = require("./routes/mark");
 
 var app = express();
 const session_opt = {
@@ -31,6 +32,7 @@ app.use(session(session_opt));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/boards", boardsRouter);
+app.use("/md", markRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
